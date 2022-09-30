@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { UserModule } from './user/user.module';
-import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
 
 @Module({
@@ -19,7 +18,6 @@ import { MessageModule } from './message/message.module';
       autoLoadEntities: true,
     }),
     UserModule,
-    ChatModule,
     MessageModule,
   ],
 })
