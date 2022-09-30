@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
+import { Chat } from '../chat/chat.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
@@ -9,15 +16,18 @@ export class Message {
   @Column()
   text: string;
 
-  @ManyToOne(() => User, (sender) => sender.id, { eager: true })
+  @CreateDateColumn()
+  created_at: Date;
+
+  @ManyToOne(() => Chat)
+  chat: Chat;
+
+  @ManyToOne(() => User)
   sender: User;
 
-  @ManyToOne(() => User, (receiver) => receiver.id, { eager: true })
-  receiver: User;
-
-  constructor(sender: User, receiver: User, text: string) {
+  constructor(chat: Chat, sender: User, text: string) {
+    this.chat = chat;
     this.sender = sender;
-    this.receiver = receiver;
     this.text = text;
   }
 }

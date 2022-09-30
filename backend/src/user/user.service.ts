@@ -19,7 +19,21 @@ export class UserService {
   }
 
   async findOrCreate(name: string): Promise<User> {
-    let user: User = await this.usersRepository.findOneBy({ name });
+    let user: User = await this.usersRepository.findOne({
+      where: {
+        name: name,
+      },
+      relations: {
+        chats: {
+          users: {
+            chats: false,
+          },
+          messages: {
+            sender: true,
+          },
+        },
+      },
+    });
     if (user) {
       return user;
     } else {

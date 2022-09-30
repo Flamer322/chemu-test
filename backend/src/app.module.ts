@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { UserModule } from './user/user.module';
 import { MessageModule } from './message/message.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MessageModule } from './message/message.module';
     }),
     UserModule,
     MessageModule,
+    ChatModule,
   ],
 })
 export class AppModule {
