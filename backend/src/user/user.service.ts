@@ -34,11 +34,13 @@ export class UserService {
         },
       },
     });
-    if (user) {
-      return user;
-    } else {
-      user = new User(name);
-      return this.usersRepository.save(user);
+    if (!user) {
+      user = await this.usersRepository.save(new User(name));
+      user.chats = [];
     }
+
+    user.chats = Object.assign({}, ...user.chats.map((x) => ({ [x.id]: x })));
+
+    return user;
   }
 }

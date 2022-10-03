@@ -14,7 +14,19 @@ export class ChatService {
   ) {}
 
   find(id: number): Promise<Chat> {
-    return this.chatRepository.findOneBy({ id });
+    return this.chatRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: {
+        users: {
+          chats: false,
+        },
+        messages: {
+          sender: true,
+        },
+      },
+    });
   }
 
   async save(userIds: number[]): Promise<Chat> {
@@ -22,6 +34,9 @@ export class ChatService {
     for (const userId of userIds) {
       users.push(await this.userService.find(userId));
     }
-    return this.chatRepository.save(new Chat(users));
+    const chat = await this.chatRepository.save(new Chat(users));
+    chat.messages = [];
+
+    return chat;
   }
 }
