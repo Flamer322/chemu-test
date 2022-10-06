@@ -30,6 +30,8 @@ export class ChatService {
   }
 
   async save(userIds: number[]): Promise<Chat> {
+    userIds.sort();
+
     const users: User[] = [];
     for (const userId of userIds) {
       users.push(await this.userService.find(userId));

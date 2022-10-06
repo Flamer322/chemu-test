@@ -32,14 +32,11 @@ export class EventGateway implements OnGatewayInit {
 
   @SubscribeMessage('user')
   handleUser(client: Socket, data: { userId: number }) {
-    console.log(client.id, data.userId);
     this.clients[data.userId] = client.id;
   }
 
   @SubscribeMessage('chat')
   async handleChat(client: Socket, data: { userIds: number[] }) {
-    console.log(data);
-
     const chat = await this.chatService.save(data.userIds);
 
     data.userIds.forEach((userId) => {
@@ -52,8 +49,6 @@ export class EventGateway implements OnGatewayInit {
     client: Socket,
     data: { chatId: number; senderId: number; text: string },
   ) {
-    console.log(data);
-
     const message = await this.messageService.save(
       data.chatId,
       data.senderId,
@@ -61,7 +56,6 @@ export class EventGateway implements OnGatewayInit {
     );
 
     message.chat.users.forEach((user) => {
-      console.log('user' + user.id);
       this.server.to('user' + user.id).emit('message', {
         chat_id: message.chat.id,
         message: {
@@ -77,7 +71,6 @@ export class EventGateway implements OnGatewayInit {
 
   @SubscribeMessage('joinRoom')
   handleJoinRoom(client: Socket, userId: number) {
-    console.log('user' + userId + ' joined room');
     client.join('user' + userId);
   }
 }

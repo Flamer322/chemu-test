@@ -18,11 +18,17 @@ export const store = new Vuex.Store({
     login(state, user) {
       state.user = user;
     },
+    logout(state) {
+      state.user = {};
+    },
     setSocket(state, socket) {
       state.socket = socket;
     },
   },
   getters: {
+    getUserName: (state) => {
+      return state.user.name;
+    },
     getSocket: (state) => {
       return state.socket;
     },
