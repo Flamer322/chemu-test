@@ -10,7 +10,7 @@ import { EventModule } from './websocket/event.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'database',
       port: 3306,
       username: 'root',
       password: 'secret',
