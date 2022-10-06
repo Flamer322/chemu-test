@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card @click="getUsers">
     <v-autocomplete
       class="pa-3"
       multiple
@@ -21,6 +21,7 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from "vuex";
 
 export default {
   name: "AddChat",
@@ -30,28 +31,34 @@ export default {
       selectedUsers: [],
     };
   },
+  computed: {
+    ...mapGetters({
+      socket: "getSocket",
+    }),
+  },
+  created() {
+    this.socket.on("chat", (data) => {
+      console.log(data);
+      this.$store.commit("addChat", data);
+      this.$emit("updateDiff");
+    });
+  },
   methods: {
+    async getUsers() {
+      let { data } = await axios.get("http://localhost:3000/user");
+      let id = this.$store.getters.getUserId;
+
+      this.users = data.filter(function (user) {
+        return user.id !== id;
+      });
+    },
     async createChat() {
       this.selectedUsers.push(this.$store.getters.getUserId);
 
-      let chat = await axios.post(`http://localhost:3000/chat`, {
-        users: this.selectedUsers,
-      });
-
-      this.$store.commit("addChat", chat.data);
-
-      this.$emit("updateDiff");
+      this.socket.emit("chat", { userIds: this.selectedUsers });
 
       this.selectedUsers = [];
     },
-  },
-  async created() {
-    let { data } = await axios.get("http://localhost:3000/user");
-    let id = this.$store.getters.getUserId;
-
-    this.users = data.filter(function (user) {
-      return user.id !== id;
-    });
   },
 };
 </script>

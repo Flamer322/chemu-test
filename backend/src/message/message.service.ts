@@ -14,18 +14,9 @@ export class MessageService {
     private userService: UserService,
   ) {}
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  async save(chatId: number, senderId: number, text: string): Promise<Object> {
+  async save(chatId: number, senderId: number, text: string): Promise<Message> {
     const chat = await this.chatService.find(chatId);
     const sender = await this.userService.find(senderId);
-    const message = await this.messageRepository.save(
-      new Message(chat, sender, text),
-    );
-    return {
-      id: message.id,
-      text: message.text,
-      sender: message.sender,
-      created_at: message.created_at,
-    };
+    return await this.messageRepository.save(new Message(chat, sender, text));
   }
 }

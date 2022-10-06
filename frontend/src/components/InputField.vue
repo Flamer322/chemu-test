@@ -11,34 +11,41 @@
 </template>
 
 <script>
-import axios from "axios";
-
-let text;
+import { mapGetters } from "vuex";
 
 export default {
   name: "InputField",
   data() {
     return {
-      text,
+      text: null,
     };
+  },
+  computed: {
+    ...mapGetters({
+      socket: "getSocket",
+    }),
   },
   props: {
     data: {
       required: true,
     },
   },
+  created() {
+    this.socket.on("message", (data) => {
+      console.log(data);
+      this.$store.commit("addMessage", {
+        chatId: data.chat_id,
+        message: data.message,
+      });
+      this.$emit("updateDiff");
+    });
+  },
   methods: {
     async sendMessage() {
-      let message = await axios.post(
-        `http://localhost:3000/message/${this.$route.params["chatId"]}/${this.data}`,
-        {
-          text: this.text,
-        }
-      );
-
-      this.$store.commit("addMessage", {
+      this.socket.emit("message", {
         chatId: this.$route.params["chatId"],
-        message: message.data,
+        senderId: this.data,
+        text: this.text,
       });
 
       this.text = "";

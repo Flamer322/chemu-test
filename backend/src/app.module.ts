@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { UserModule } from './user/user.module';
 import { MessageModule } from './message/message.module';
 import { ChatModule } from './chat/chat.module';
+import { EventModule } from './websocket/event.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ChatModule } from './chat/chat.module';
     UserModule,
     MessageModule,
     ChatModule,
+    EventModule,
   ],
 })
 export class AppModule {

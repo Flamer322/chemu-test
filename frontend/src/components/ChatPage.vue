@@ -1,7 +1,7 @@
 <template>
   <div>
-    <MessageList :data="data" />
-    <InputField :data="data.id" />
+    <MessageList :key="messagesDiff" :data="data" />
+    <InputField @updateDiff="updateDiff" :data="data.id" />
   </div>
 </template>
 
@@ -14,6 +14,16 @@ export default {
   components: {
     MessageList,
     InputField,
+  },
+  data() {
+    return {
+      messagesDiff: 0,
+    };
+  },
+  methods: {
+    updateDiff() {
+      this.messagesDiff++;
+    },
   },
   props: {
     data: {

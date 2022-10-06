@@ -25,23 +25,40 @@
 
 <script>
 import axios from "axios";
-
-let login;
+import io from "socket.io-client";
 
 export default {
   name: "LoginPage",
   data() {
     return {
-      login,
+      socket: null,
+      login: "",
     };
+  },
+  created() {
+    const socket = io("http://localhost:3000");
+
+    socket.on("connect", function () {
+      console.log("Connected");
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("Disconnected", reason);
+    });
+
+    this.socket = socket;
+
+    this.$store.commit("setSocket", this.socket);
   },
   methods: {
     async getOrCreate() {
-      let user = await axios.post(`http://localhost:3000/user/name`, {
+      const { data } = await axios.post(`http://localhost:3000/user/name`, {
         name: this.login,
       });
 
-      this.$store.commit("login", user.data);
+      this.socket.emit("joinRoom", data.id);
+
+      this.$store.commit("login", data);
       await this.$router.push("/chats");
     },
   },

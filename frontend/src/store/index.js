@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     user: {},
+    socket: null,
   },
   mutations: {
     addMessage(state, data) {
@@ -17,8 +18,14 @@ export const store = new Vuex.Store({
     login(state, user) {
       state.user = user;
     },
+    setSocket(state, socket) {
+      state.socket = socket;
+    },
   },
   getters: {
+    getSocket: (state) => {
+      return state.socket;
+    },
     getChats: (state) => {
       return state.user.chats;
     },
